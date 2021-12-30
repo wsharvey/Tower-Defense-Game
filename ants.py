@@ -1,5 +1,3 @@
-"""CS 61A presents Ants Vs. SomeBees."""
-
 import random
 from ucb import main, interact, trace
 from collections import OrderedDict
@@ -23,12 +21,9 @@ class Place:
         self.bees = []        # A list of Bees
         self.ant = None       # An Ant
         self.entrance = None  # A Place
-        # Phase 1: Add an entrance to the exit
-        # BEGIN Problem 2
         if self.exit:
             self.exit.entrance = self
-        "*** YOUR CODE HERE ***"
-        # END Problem 2
+        
 
     def is_hive(self):
         return False
@@ -56,7 +51,6 @@ class Insect:
 
     damage = 0
     is_watersafe = False
-    # ADD CLASS ATTRIBUTES HERE
 
     def __init__(self, health, place=None):
         """Create an Insect with a health amount and a starting PLACE."""
@@ -108,7 +102,6 @@ class Ant(Insect):
 
     implemented = False  # Only implemented Ant classes should be instantiated
     food_cost = 0
-    # ADD CLASS ATTRIBUTES HERE
 
     def __init__(self, health=1):
         """Create an Insect with a HEALTH quantity."""
@@ -130,7 +123,6 @@ class Ant(Insect):
         if place.ant is None:
             place.ant = self
         else:
-            # BEGIN Problem 8
             new_ant = self
             current_ant = place.ant
             if new_ant.can_contain(current_ant):
@@ -140,7 +132,6 @@ class Ant(Insect):
                 current_ant.contain_ant(new_ant)
             else:
                 assert False, 'Two ants in {0}'.format(place)
-            # END Problem 8
         Insect.add_to(self, place)
 
     def remove_from(self, place):
@@ -155,9 +146,6 @@ class Ant(Insect):
 
     def buff(self):
         """Double this ants's damage, if it has not already been buffed."""
-        # BEGIN Problem EC
-        "*** YOUR CODE HERE ***"
-        # END Problem EC
 
 
 class HarvesterAnt(Ant):
@@ -166,17 +154,14 @@ class HarvesterAnt(Ant):
     name = 'Harvester'
     implemented = True
     food_cost = 2
-    # OVERRIDE CLASS ATTRIBUTES HERE
 
     def action(self, gamestate):
         """Produce 1 additional food for the colony.
 
         gamestate -- The GameState, used to access game state information.
         """
-        # BEGIN Problem 1
-        "*** YOUR CODE HERE ***"
         gamestate.food += 1
-        # END Problem 1
+        
 
 
 class ThrowerAnt(Ant):
@@ -188,7 +173,6 @@ class ThrowerAnt(Ant):
     food_cost = 3
     min_range = 0
     max_range = float('inf')
-    # ADD/OVERRIDE CLASS ATTRIBUTES HERE
 
     def nearest_bee(self, beehive):
         """Return the nearest Bee in a Place that is not the HIVE (beehive), connected to
@@ -196,7 +180,6 @@ class ThrowerAnt(Ant):
 
         This method returns None if there is no such Bee (or none in range).
         """
-        # BEGIN Problem 3 and 4
         starter = self.place
         entrance_counter = 0
         while starter.is_hive() == False:
@@ -210,7 +193,6 @@ class ThrowerAnt(Ant):
                 else:
                     return bee_selector(starter.bees)
         
-        # END Problem 3 and 4
 
     def throw_at(self, target):
         """Throw a leaf at the TARGET Bee, reducing its health."""
@@ -241,11 +223,7 @@ class ShortThrower(ThrowerAnt):
     min_range = 0
     max_range = 3
     health = 1
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem 4
     implemented = True 
-    
-    # END Problem 4
 
 
 class LongThrower(ThrowerAnt):
@@ -256,10 +234,7 @@ class LongThrower(ThrowerAnt):
     min_range = 5
     max_range = float('inf')
     health = 1
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem 4
-    implemented = True   # Change to True to view in the GUI
-    # END Problem 4
+    implemented = True 
 
 
 class FireAnt(Ant):
@@ -268,10 +243,7 @@ class FireAnt(Ant):
     name = 'Fire'
     damage = 3
     food_cost = 5
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem 5
-    implemented = True   # Change to True to view in the GUI
-    # END Problem 5
+    implemented = True
 
     def __init__(self, health=3):
         """Create an Ant with a HEALTH quantity."""
@@ -284,8 +256,6 @@ class FireAnt(Ant):
         Make sure to reduce the health of each bee in the current place, and apply
         the additional damage if the fire ant dies.
         """
-        # BEGIN Problem 5
-        "*** YOUR CODE HERE ***"
         copied_list = self.place.bees[:]
         if self.health - amount <= 0:
             for bees in copied_list:
@@ -296,11 +266,6 @@ class FireAnt(Ant):
                 bees.reduce_health(amount)
         super().reduce_health(amount)
 
-
-
-        # END Problem 5
-
-# BEGIN Problem 6
 class WallAnt(Ant):
 
     implemented = True
@@ -310,10 +275,7 @@ class WallAnt(Ant):
     def __init__(self, health = 4):
         super().__init__(health)
 
-# The WallAnt class
-# END Problem 6
 
-# BEGIN Problem 7
 class HungryAnt(Ant):
 
     implemented = True
@@ -334,9 +296,6 @@ class HungryAnt(Ant):
                 random_bee.reduce_health(random_bee.health)
                 self.chewing = self.chew_duration
 
-# The HungryAnt Class
-# END Problem 7
-
 
 class ContainerAnt(Ant):
     def __init__(self, *args, **kwargs):
@@ -347,17 +306,11 @@ class ContainerAnt(Ant):
         return True
 
     def can_contain(self, other):
-        # BEGIN Problem 8
-        "*** YOUR CODE HERE ***"
         if self.contained_ant == None and other.is_container() == False:
             return True
-        # END Problem 8
 
     def contain_ant(self, ant):
-        # BEGIN Problem 8
         self.contained_ant = ant
-        "*** YOUR CODE HERE ***"
-        # END Problem 8
 
     def remove_ant(self, ant):
         if self.contained_ant is not ant:
@@ -375,27 +328,19 @@ class ContainerAnt(Ant):
             Ant.remove_from(self, place)
 
     def action(self, gamestate):
-        # BEGIN Problem 8
-        "*** YOUR CODE HERE ***"
         if self.contained_ant:
             self.contained_ant.action(gamestate)
-        # END Problem 8
-
 
 class BodyguardAnt(ContainerAnt):
     """BodyguardAnt provides protection to other Ants."""
 
     name = 'Bodyguard'
     food_cost = 4
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem 8
     implemented = True
     
     def __init__(self, health = 2):
         super().__init__(health)
-    # END Problem 8
 
-# BEGIN Problem 9
 class TankAnt(ContainerAnt):
 
     name = 'Tank'
@@ -414,24 +359,16 @@ class TankAnt(ContainerAnt):
         super().action(gamestate)
                 
 
-# The TankAnt class
-# END Problem 9
-
-
 class Water(Place):
     """Water is a place that can only hold watersafe insects."""
 
     def add_insect(self, insect):
         """Add an Insect to this place. If the insect is not watersafe, reduce
         its health to 0."""
-        # BEGIN Problem 10
-        "*** YOUR CODE HERE ***"
         super().add_insect(insect)
         if insect.is_watersafe == False:
             insect.reduce_health(insect.health)
-        # END Problem 10
-
-# BEGIN Problem 11
+        
 class ScubaThrower(ThrowerAnt):
     name = 'Scuba'
     implemented = True
@@ -440,46 +377,6 @@ class ScubaThrower(ThrowerAnt):
 
     def __init__(self, health = 1):
         super().__init__(health)
-
-    
-# END Problem 11
-
-# BEGIN Problem EC
-
-
-class QueenAnt(Ant):  # You should change this line
-# END Problem EC
-    """The Queen of the colony. The game is over if a bee enters her place."""
-
-    name = 'Queen'
-    food_cost = 7
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem EC
-    implemented = False   # Change to True to view in the GUI
-    # END Problem EC
-
-    def __init__(self, health=1):
-        # BEGIN Problem EC
-        "*** YOUR CODE HERE ***"
-        # END Problem EC
-
-    def action(self, gamestate):
-        """A queen ant throws a leaf, but also doubles the damage of ants
-        in her tunnel.
-
-        Impostor queens do only one thing: reduce their own health to 0.
-        """
-        # BEGIN Problem EC
-        "*** YOUR CODE HERE ***"
-        # END Problem EC
-
-    def reduce_health(self, amount):
-        """Reduce health by AMOUNT, and if the True QueenAnt has no health
-        remaining, signal the end of the game.
-        """
-        # BEGIN Problem EC
-        "*** YOUR CODE HERE ***"
-        # END Problem EC
 
 
 class AntRemover(Ant):
@@ -498,7 +395,6 @@ class Bee(Insect):
     name = 'Bee'
     damage = 1
     is_watersafe = True
-    # OVERRIDE CLASS ATTRIBUTES HERE
 
     def sting(self, ant):
         """Attack an ANT, reducing its health by 1."""
@@ -511,10 +407,8 @@ class Bee(Insect):
 
     def blocked(self):
         """Return True if this Bee cannot advance to the next Place."""
-        # Special handling for NinjaAnt
-        # BEGIN Problem Optional 1
         return self.place.ant is not None
-        # END Problem Optional 1
+      
 
     def action(self, gamestate):
         """A Bee's action stings the Ant that blocks its exit if it is blocked,
@@ -523,10 +417,6 @@ class Bee(Insect):
         gamestate -- The GameState, used to access game state information.
         """
         destination = self.place.exit
-        # Extra credit: Special handling for bee direction
-        # BEGIN Problem Optional 2
-        "*** YOUR CODE HERE ***"
-        # END Problem Optional 2
         if self.blocked():
             self.sting(self.place.ant)
         elif self.health > 0 and destination is not None:
@@ -540,117 +430,6 @@ class Bee(Insect):
         place.bees.remove(self)
         Insect.remove_from(self, place)
 
-    def slow(self, length):
-        """Apply a status lasting LENGTH turns that causes bee to execute
-        the previous .action on even-numbered turns."""
-        # BEGIN Problem Optional 2
-        "*** YOUR CODE HERE ***"
-        # END Problem Optional 2
-
-    def scare(self, length):
-        """If this Bee has not been scared before, apply a status that
-        lasts for LENGTH turns that causes bee to go backwards."""
-
-        # BEGIN Problem Optional 2
-        "*** YOUR CODE HERE ***"
-        # END Problem Optional 2
-
-    def apply_status(self, status, previous_action, length):
-        """Apply STATUS to replace the current .action method for
-        duraction LENGTH calls, after which it simply calls PREVIOUS_ACTION."""
-
-        # BEGIN Problem Optional 2
-        "*** YOUR CODE HERE ***"
-        # END Problem Optional 2
-
-
-############
-# Optional #
-############
-
-class NinjaAnt(Ant):
-    """NinjaAnt does not block the path and damages all bees in its place.
-    This class is optional.
-    """
-
-    name = 'Ninja'
-    damage = 1
-    food_cost = 5
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem Optional 1
-    implemented = False   # Change to True to view in the GUI
-    # END Problem Optional 1
-
-    def action(self, gamestate):
-        # BEGIN Problem Optional 1
-        "*** YOUR CODE HERE ***"
-        # END Problem Optional 1
-
-############
-# Statuses #
-############
-
-
-class SlowThrower(ThrowerAnt):
-    """ThrowerAnt that causes Slow on Bees."""
-
-    name = 'Slow'
-    food_cost = 4
-    # BEGIN Problem Optional 2
-    implemented = False   # Change to True to view in the GUI
-    # END Problem Optional 2
-
-    def throw_at(self, target):
-        if target:
-            target.slow(3)
-
-
-class ScaryThrower(ThrowerAnt):
-    """ThrowerAnt that intimidates Bees, making them back away instead of advancing."""
-
-    name = 'Scary'
-    food_cost = 6
-    # BEGIN Problem Optional 2
-    implemented = False   # Change to True to view in the GUI
-    # END Problem Optional 2
-
-    def throw_at(self, target):
-        # BEGIN Problem Optional 2
-        "*** YOUR CODE HERE ***"
-        # END Problem Optional 2
-
-
-class LaserAnt(ThrowerAnt):
-    # This class is optional. Only one test is provided for this class.
-
-    name = 'Laser'
-    food_cost = 10
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem Optional 3
-    implemented = False   # Change to True to view in the GUI
-    # END Problem Optional 3
-
-    def __init__(self, health=1):
-        super().__init__(health)
-        self.insects_shot = 0
-
-    def insects_in_front(self, beehive):
-        # BEGIN Problem Optional 3
-        return {}
-        # END Problem Optional 3
-
-    def calculate_damage(self, distance):
-        # BEGIN Problem Optional 3
-        return 0
-        # END Problem Optional 3
-
-    def action(self, gamestate):
-        insects_and_distances = self.insects_in_front(gamestate.beehive)
-        for insect, distance in insects_and_distances.items():
-            damage = self.calculate_damage(distance)
-            insect.reduce_health(damage)
-            if damage:
-                self.insects_shot += 1
 
 
 ##################
@@ -678,16 +457,6 @@ class Hornet(Bee):
     def __setattr__(self, name, value):
         if name != 'action':
             object.__setattr__(self, name, value)
-
-
-class NinjaBee(Bee):
-    """A Bee that cannot be blocked. Is capable of moving past all defenses to
-    assassinate the Queen.
-    """
-    name = 'NinjaBee'
-
-    def blocked(self):
-        return False
 
 
 class Boss(Wasp, Hornet):
